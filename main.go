@@ -1,24 +1,37 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/tuotoo/qrcode"
 	"os"
 )
 
-const appname = "qrr"
-const version = "0.0.1"
-const platform = "darwin/amd64"
+var (
+	h bool
+	v bool
+	d string
+)
+
+const (
+	appname  = "qrr"
+	version  = "0.1.0"
+	platform = "darwin/amd64"
+)
 
 func main() {
-	s := os.Args[1]
-	switch s {
-	case "--version":
-		fmt.Printf("%v verion %v %v\n", appname, version, platform)
-	case "--help":
-		fmt.Println("Just show some help infos")
-	default:
-		fi, err := os.Open(s)
+	flag.Parse()
+
+	if h {
+		flag.Usage()
+	}
+
+	if v {
+		fmt.Printf("%v %v %v\n", appname, version, platform)
+	}
+
+	if d != "" {
+		fi, err := os.Open(d)
 		if err != nil {
 			fmt.Println(err.Error())
 			return
@@ -31,4 +44,20 @@ func main() {
 		}
 		fmt.Println(qrmatrix.Content)
 	}
+}
+
+func usage() {
+	fmt.Fprintf(os.Stderr, `qrr version: qrr 0.1.0
+Usage: qrr [-d decode] [-h help] [-v version]
+	
+Options:
+`)
+	flag.PrintDefaults()
+}
+
+func init() {
+	flag.StringVar(&d, "d", "", "`decode` following qrcode")
+	flag.BoolVar(&h, "h", false, "show qrr help")
+	flag.BoolVar(&v, "v", false, "show version")
+	flag.Usage = usage
 }

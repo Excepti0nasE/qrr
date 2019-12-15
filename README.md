@@ -3,6 +3,6 @@ qrr -> QRCodeReader
 ## Install
 `go get github.com/Excepti0nasE/qrr`
 ## Usage
-`qrr example.png`  
+`qrr -d example.png`  
 
-`qrr example.png > example.txt`
+`qrr -d example.png > example.txt`
